@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Career Bridge | Job Discovery Platform</title>
+  <script>
+    document.documentElement.classList.add("js");
+  </script>
+  <meta
+    name="description"
+    content="Career Bridge helps job seekers explore roles, understand salary ranges, and connect with employers."
+  />
+  <meta name="career-bridge-api-base" content="" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Spectral:wght@600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWix+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkR4j8v+8IH9rN6fHf7a7nD4R8+Yx04fGxiw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+  <div class="bg-orb bg-orb-left" aria-hidden="true"></div>
+  <div class="bg-orb bg-orb-right" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="#home" class="brand">
+        <span class="brand-mark">CB</span>
+        <span class="brand-text">Career Bridge</span>
+      </a>
+
+      <div class="header-right">
+        <button id="menuButton" class="menu-button" aria-expanded="false" aria-controls="siteNav">
+          <span class="sr-only">Toggle menu</span>
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <nav id="siteNav" class="site-nav" aria-label="Primary">
+          <a href="#salaries">Salary Insights</a>
+          <a href="#jobs">Jobs</a>
+          <a href="#employers">Employers</a>
+          <a href="#applications">Applications</a>
+          <a href="#audience">Audience</a>
+          <a href="#timeline">Timeline</a>
+        </nav>
+
+        <div class="auth-corner">
+          <p id="authQuickStatus" class="auth-quick-status">Not signed in</p>
+          <button id="openAuthModalButton" class="btn btn-secondary auth-open-btn" type="button">
+            <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
+            <span id="openAuthModalButtonLabel">Login</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="home">
+    <section class="hero section reveal">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="kicker">Job Discovery and Career Connection</p>
+          <h1>Find Better Jobs. Understand Fair Salaries.</h1>
+          <p>
+            Career Bridge is a responsive platform concept for Bangladesh that helps job seekers discover
+            opportunities and compare salary ranges in one simple experience.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#jobs">Explore Jobs</a>
+            <a class="btn btn-secondary" href="#salaries">View Salary Ranges</a>
+          </div>
+
+          <p class="status-line">
+            <span id="apiStatus" class="status-pill">Checking backend...</span>
+            <span id="apiHint">Run the backend for full live mode.</span>
+          </p>
+
+          <ul class="hero-meta" aria-label="Platform support and stack">
+            <li><i class="fa-brands fa-chrome"></i> Chrome, Firefox, Edge, Safari</li>
+            <li><i class="fa-solid fa-mobile-screen"></i> Desktop, tablet, smartphone</li>
+            <li><i class="fa-solid fa-code"></i> HTML5, CSS3, JavaScript ES6</li>
+          </ul>
+        </div>
+
+        <aside class="hero-panel" aria-label="Platform quick stats">
+          <h2>Quick Snapshot</h2>
+          <div class="panel-grid">
+            <article>
+              <p class="stat">20 - 40</p>
+              <p>Primary age group</p>
+            </article>
+            <article>
+              <p class="stat">6</p>
+              <p>Planned project phases</p>
+            </article>
+            <article>
+              <p class="stat">4+</p>
+              <p>Future product modules</p>
+            </article>
+            <article>
+              <p class="stat">BDT</p>
+              <p>Localized salary benchmarks</p>
+            </article>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="salaries" class="section reveal">
+      <div class="container">
+        <div class="section-heading">
+          <p class="kicker">Core Feature</p>
+          <h2>Salary Range Cards</h2>
+          <p>
+            Starting data is currently mocked in JavaScript. Replace it with backend API values in a later phase.
+          </p>
+        </div>
+        <div id="salaryGrid" class="card-grid"></div>
+      </div>
+    </section>
+
+    <section id="jobs" class="section reveal">
+      <div class="container">
+        <div class="section-heading">
+          <p class="kicker">Core Feature</p>
+          <h2>Job Discovery</h2>
+          <p>Search by role, company, or location. Click a card for details and submit applications.</p>
+          <p class="inline-meta"><span id="jobCount">0</span> jobs currently available</p>
+        </div>
+
+        <form id="jobFilterForm" class="job-filter" role="search">
+          <label for="jobSearch" class="sr-only">Search jobs</label>
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+          <input
+            id="jobSearch"
+            type="search"
+            placeholder="Search jobs, companies, or locations..."
+            autocomplete="off"
+          />
+        </form>
+
+        <div id="jobList" class="job-grid"></div>
+
+        <p id="employeeAuthStatus" class="form-status auth-inline-status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section id="employers" class="section reveal">
+      <div class="container two-col">
+        <article class="panel">
+          <h2>Employer Job Posting</h2>
+          <p>Create a listing and publish it instantly on the platform.</p>
+          <p class="helper-note">Posting uses the signed-in employer credentials.</p>
+
+          <form id="postJobForm" class="stack-form">
+            <label>
+              Job title
+              <input id="postTitle" name="title" type="text" required />
+            </label>
+
+            <label>
+              Company
+              <input id="postCompany" name="company" type="text" required />
+            </label>
+
+            <div class="form-row">
+              <label>
+                Location
+                <input id="postLocation" name="location" type="text" placeholder="Dhaka" />
+              </label>
+              <label>
+                Type
+                <select id="postType" name="type">
+                  <option>Full-time</option>
+                  <option>Part-time</option>
+                  <option>Hybrid</option>
+                  <option>Remote</option>
+                  <option>Contract</option>
+                </select>
+              </label>
+            </div>
+
+            <label>
+              Salary range
+              <input id="postSalary" name="salary" type="text" placeholder="BDT 45,000 - 70,000" />
+            </label>
+
+            <label>
+              Job description
+              <textarea id="postDescription" name="description" rows="3"></textarea>
+            </label>
+
+            <label>
+              Requirements (comma or new line separated)
+              <textarea id="postRequirements" name="requirements" rows="3"></textarea>
+            </label>
+
+            <button class="btn btn-primary" type="submit">Post Job</button>
+            <p id="postJobStatus" class="form-status" aria-live="polite"></p>
+          </form>
+        </article>
+
+        <article class="panel">
+          <h2>Manage Job Listings</h2>
+          <p>Review active listings and remove any outdated posts.</p>
+
+          <p class="helper-note">Use the Login button at the top-right and sign in as Employer to manage listings.</p>
+          <p id="employerAuthStatus" class="form-status auth-inline-status" aria-live="polite"></p>
+
+          <div id="listingGrid" class="listing-grid"></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="applications" class="section reveal">
+      <div class="container">
+        <div class="section-heading">
+          <p class="kicker">Employer View</p>
+          <h2>Recent Applications</h2>
+          <p>Only applications owned by the signed-in employer are shown here.</p>
+        </div>
+
+        <div id="applicationList" class="application-grid"></div>
+      </div>
+    </section>
+
+    <section id="audience" class="section reveal">
+      <div class="container two-col">
+        <article class="panel">
+          <h2>Job Seeker Use Cases</h2>
+          <ul>
+            <li>View salary ranges by common job roles</li>
+            <li>Search jobs and inspect role details</li>
+            <li>Apply for a selected opportunity</li>
+          </ul>
+        </article>
+
+        <article class="panel">
+          <h2>Employer Use Cases</h2>
+          <ul>
+            <li>Post job listings</li>
+            <li>Manage active job posts</li>
+            <li>Track candidate applications</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="timeline" class="section reveal">
+      <div class="container">
+        <div class="section-heading">
+          <p class="kicker">Project Roadmap</p>
+          <h2>Phase Timeline</h2>
+        </div>
+
+        <ol class="timeline">
+          <li>Requirement and planning</li>
+          <li>UI and UX design</li>
+          <li>Frontend development</li>
+          <li>Content integration</li>
+          <li>Testing and debugging</li>
+          <li>Deployment and documentation</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="container architecture">
+        <h2>Architecture Placeholder</h2>
+        <p>
+          Frontend (HTML/CSS/JS) -> Backend Server -> Database (Users, Jobs, Salaries) -> Firebase Hosting or Cloud.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-wrap">
+      <p>Career Bridge Skeleton Project</p>
+      <p>Software Development Project I</p>
+    </div>
+  </footer>
+
+  <div id="jobModal" class="modal" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div
+      class="modal-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modalJobTitle"
+      aria-describedby="modalJobDescription"
+    >
+      <button id="closeModalButton" class="close-modal" type="button" aria-label="Close job details">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div id="jobDetailPanel" class="job-detail-panel"></div>
+
+      <h3>Apply for this job</h3>
+      <form id="applyForm" class="stack-form">
+        <input id="applyJobId" name="jobId" type="hidden" />
+
+        <label>
+          Full name
+          <input id="applyName" name="applicantName" type="text" required />
+        </label>
+
+        <label>
+          Email
+          <input id="applyEmail" name="applicantEmail" type="email" required />
+        </label>
+
+        <label>
+          Phone
+          <input id="applyPhone" name="applicantPhone" type="tel" placeholder="Optional" />
+        </label>
+
+        <label>
+          CV (PDF, DOC, DOCX)
+          <input
+            id="applyCvFile"
+            name="cvFile"
+            type="file"
+            accept=".pdf,.doc,.docx"
+            required
+          />
+        </label>
+
+        <label>
+          Cover letter
+          <textarea id="applyCoverLetter" name="coverLetter" rows="3"></textarea>
+        </label>
+
+        <button class="btn btn-primary" type="submit">Submit Application</button>
+        <p id="applyStatus" class="form-status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+
+  <div id="cvModal" class="modal" hidden>
+    <div class="modal-backdrop" data-close-cv-modal></div>
+    <div
+      class="modal-dialog cv-modal-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="cvModalTitle"
+    >
+      <button id="closeCvModalButton" class="close-modal" type="button" aria-label="Close CV preview">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h3 id="cvModalTitle">Applicant CV</h3>
+      <p id="cvModalStatus" class="form-status" aria-live="polite"></p>
+
+      <div class="cv-modal-tools">
+        <button id="downloadCvButton" class="btn btn-secondary" type="button">Download CV</button>
+      </div>
+
+      <iframe id="cvPreviewFrame" class="cv-preview-frame" title="Applicant CV Preview"></iframe>
+    </div>
+  </div>
+
+  <div id="authModal" class="modal" hidden>
+    <div class="modal-backdrop" data-close-auth-modal></div>
+    <div
+      class="modal-dialog auth-modal-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="authModalTitle"
+    >
+      <button id="closeAuthModalButton" class="close-modal" type="button" aria-label="Close login dialog">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h3 id="authModalTitle">Account Login</h3>
+      <p class="helper-note">Choose your role and sign in.</p>
+
+      <div class="auth-role-switch" role="tablist" aria-label="Account role">
+        <button
+          id="employeeAuthTab"
+          class="auth-role-tab active"
+          type="button"
+          role="tab"
+          aria-selected="true"
+          aria-controls="employeeAuthPanel"
+          data-auth-role="employee"
+        >
+          Employee
+        </button>
+        <button
+          id="employerAuthTab"
+          class="auth-role-tab"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="employerAuthPanel"
+          data-auth-role="employer"
+        >
+          Employer
+        </button>
+      </div>
+
+      <section id="employeeAuthPanel" class="auth-panel" role="tabpanel" aria-labelledby="employeeAuthTab">
+        <form id="employeeAuthForm" class="stack-form">
+          <label>
+            Employee email
+            <input id="employeeEmail" name="employeeEmail" type="email" required />
+          </label>
+
+          <label>
+            Employee password
+            <input id="employeePassword" name="employeePassword" type="password" required />
+          </label>
+
+          <div class="inline-actions">
+            <button class="btn btn-secondary" type="submit">Sign In as Employee</button>
+            <button id="employeeLogoutButton" class="btn btn-ghost" type="button">Sign Out</button>
+          </div>
+        </form>
+        <p class="helper-note">Demo employee login: employee@careerbridge.com / demo1234</p>
+      </section>
+
+      <section id="employerAuthPanel" class="auth-panel" role="tabpanel" aria-labelledby="employerAuthTab" hidden>
+        <form id="employerAuthForm" class="stack-form">
+          <label>
+            Employer email
+            <input id="employerEmail" name="employerEmail" type="email" required />
+          </label>
+
+          <label>
+            Employer access key
+            <input id="employerKey" name="employerKey" type="password" required />
+          </label>
+
+          <div class="inline-actions">
+            <button class="btn btn-secondary" type="submit">Sign In as Employer</button>
+            <button id="employerLogoutButton" class="btn btn-ghost" type="button">Sign Out</button>
+          </div>
+        </form>
+        <p class="helper-note">Demo employer login: employer@careerbridge.com / demo1234</p>
+      </section>
+    </div>
+  </div>
+
+  <script src="scripts/main.js" defer></script>
+</body>
+</html>

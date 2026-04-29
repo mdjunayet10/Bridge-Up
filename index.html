@@ -9,7 +9,7 @@
   </script>
   <meta
     name="description"
-    content="Career Bridge helps job seekers explore roles, understand salary ranges, and connect with employers."
+    content="Career Bridge helps Bangladesh job seekers discover roles, compare salary insights, apply with CVs, and connect with employers."
   />
   <meta name="career-bridge-api-base" content="" />
 
@@ -29,8 +29,7 @@
   <link rel="stylesheet" href="styles/main.css" />
 </head>
 <body>
-  <div class="bg-orb bg-orb-left" aria-hidden="true"></div>
-  <div class="bg-orb bg-orb-right" aria-hidden="true"></div>
+  <div class="background-mesh" aria-hidden="true"></div>
 
   <header class="site-header">
     <div class="container nav-wrap">
@@ -46,12 +45,10 @@
         </button>
 
         <nav id="siteNav" class="site-nav" aria-label="Primary">
+          <a href="#jobs">Find Jobs</a>
           <a href="#salaries">Salary Insights</a>
-          <a href="#jobs">Jobs</a>
           <a href="#employers">Employers</a>
           <a href="#applications">Applications</a>
-          <a href="#audience">Audience</a>
-          <a href="#timeline">Timeline</a>
         </nav>
 
         <div class="auth-corner">
@@ -69,16 +66,17 @@
     <section class="hero section reveal">
       <div class="container hero-grid">
         <div class="hero-copy">
-          <p class="kicker">Job Discovery and Career Connection</p>
-          <h1>Find Better Jobs. Understand Fair Salaries.</h1>
+          <p class="kicker">Bangladesh Career Platform</p>
+          <h1>Find jobs, build your career, and connect with employers.</h1>
           <p>
-            Career Bridge is a responsive platform concept for Bangladesh that helps job seekers discover
-            opportunities and compare salary ranges in one simple experience.
+            Career Bridge brings job discovery, salary insight, CV applications, and employer hiring tools
+            into one fast, trustworthy platform built for Bangladesh's growing professional market.
           </p>
 
           <div class="hero-actions">
-            <a class="btn btn-primary" href="#jobs">Explore Jobs</a>
-            <a class="btn btn-secondary" href="#salaries">View Salary Ranges</a>
+            <a class="btn btn-primary" href="#jobs"><i class="fa-solid fa-briefcase" aria-hidden="true"></i>Explore Jobs</a>
+            <a class="btn btn-secondary" href="#employers"><i class="fa-solid fa-plus" aria-hidden="true"></i>Post a Job</a>
+            <a class="btn btn-ghost" href="#salaries"><i class="fa-solid fa-chart-line" aria-hidden="true"></i>Salary Insights</a>
           </div>
 
           <p class="status-line">
@@ -86,60 +84,69 @@
             <span id="apiHint">Run the backend for full live mode.</span>
           </p>
 
-          <ul class="hero-meta" aria-label="Platform support and stack">
-            <li><i class="fa-brands fa-chrome"></i> Chrome, Firefox, Edge, Safari</li>
-            <li><i class="fa-solid fa-mobile-screen"></i> Desktop, tablet, smartphone</li>
-            <li><i class="fa-solid fa-code"></i> HTML5, CSS3, JavaScript ES6</li>
+          <ul class="hero-meta" aria-label="Career Bridge highlights">
+            <li><i class="fa-solid fa-location-dot"></i> Dhaka-first job market signals</li>
+            <li><i class="fa-solid fa-file-arrow-up"></i> Apply with CV upload and preview</li>
+            <li><i class="fa-solid fa-user-tie"></i> Employer dashboard for hiring teams</li>
           </ul>
         </div>
 
-        <aside class="hero-panel" aria-label="Platform quick stats">
-          <h2>Quick Snapshot</h2>
+        <aside class="hero-panel dashboard-preview" aria-label="Career Bridge dashboard preview">
+          <div class="dashboard-preview-header">
+            <div>
+              <p class="eyebrow">Live hiring desk</p>
+              <h2>Career Match Command</h2>
+            </div>
+            <span class="live-dot">Active</span>
+          </div>
+          <div class="match-card">
+            <div>
+              <span class="match-score">92%</span>
+              <p>Frontend Developer match</p>
+            </div>
+            <span class="badge success">Dhaka</span>
+          </div>
           <div class="panel-grid">
             <article>
-              <p class="stat">20 - 40</p>
-              <p>Primary age group</p>
+              <i class="fa-solid fa-sack-dollar" aria-hidden="true"></i>
+              <p class="stat">BDT 35k-80k</p>
+              <p>Salary range</p>
             </article>
             <article>
-              <p class="stat">6</p>
-              <p>Planned project phases</p>
+              <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+              <p class="stat">18</p>
+              <p>Applications tracked</p>
             </article>
             <article>
-              <p class="stat">4+</p>
-              <p>Future product modules</p>
+              <i class="fa-solid fa-building" aria-hidden="true"></i>
+              <p class="stat">7</p>
+              <p>Employer actions</p>
             </article>
             <article>
-              <p class="stat">BDT</p>
-              <p>Localized salary benchmarks</p>
+              <i class="fa-solid fa-bolt" aria-hidden="true"></i>
+              <p class="stat">Fast</p>
+              <p>Live API workflow</p>
             </article>
           </div>
+          <div class="activity-strip">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
         </aside>
-      </div>
-    </section>
-
-    <section id="salaries" class="section reveal">
-      <div class="container">
-        <div class="section-heading">
-          <p class="kicker">Core Feature</p>
-          <h2>Salary Range Cards</h2>
-          <p>
-            Starting data is currently mocked in JavaScript. Replace it with backend API values in a later phase.
-          </p>
-        </div>
-        <div id="salaryGrid" class="card-grid"></div>
       </div>
     </section>
 
     <section id="jobs" class="section reveal">
       <div class="container">
         <div class="section-heading">
-          <p class="kicker">Core Feature</p>
-          <h2>Job Discovery</h2>
-          <p>Search by role, company, or location. Click a card for details and submit applications.</p>
+          <p class="kicker">Job Discovery</p>
+          <h2>Search serious roles from growing employers.</h2>
+          <p>Search by role, company, or location. Open a role for details, requirements, and CV application.</p>
           <p class="inline-meta"><span id="jobCount">0</span> jobs currently available</p>
         </div>
 
-        <form id="jobFilterForm" class="job-filter" role="search">
+        <form id="jobFilterForm" class="job-filter search-panel" role="search">
           <label for="jobSearch" class="sr-only">Search jobs</label>
           <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
           <input
@@ -149,6 +156,13 @@
             autocomplete="off"
           />
         </form>
+        <div id="filterChips" class="filter-chips" aria-label="Quick job filters">
+          <button class="filter-chip active" type="button" data-filter="">All roles</button>
+          <button class="filter-chip" type="button" data-filter="Dhaka">Dhaka</button>
+          <button class="filter-chip" type="button" data-filter="Hybrid">Hybrid</button>
+          <button class="filter-chip" type="button" data-filter="Developer">Developer</button>
+          <button class="filter-chip" type="button" data-filter="Data">Data</button>
+        </div>
 
         <div id="jobList" class="job-grid"></div>
 
@@ -156,11 +170,25 @@
       </div>
     </section>
 
+    <section id="salaries" class="section reveal">
+      <div class="container">
+        <div class="section-heading">
+          <p class="kicker">Salary Intelligence</p>
+          <h2>Understand fair pay before you apply.</h2>
+          <p>
+            Role-based BDT salary ranges help candidates negotiate and help employers set realistic offers.
+          </p>
+        </div>
+        <div id="salaryGrid" class="card-grid"></div>
+      </div>
+    </section>
+
     <section id="employers" class="section reveal">
       <div class="container two-col">
         <article class="panel">
-          <h2>Employer Job Posting</h2>
-          <p>Create a listing and publish it instantly on the platform.</p>
+          <p class="kicker">Employer Console</p>
+          <h2>Post a job</h2>
+          <p>Create a polished listing and publish it instantly on the platform.</p>
           <p class="helper-note">Posting uses the signed-in employer credentials.</p>
 
           <form id="postJobForm" class="stack-form">
@@ -212,6 +240,7 @@
         </article>
 
         <article class="panel">
+          <p class="kicker">Hiring Operations</p>
           <h2>Manage Job Listings</h2>
           <p>Review active listings and remove any outdated posts.</p>
 
@@ -235,10 +264,10 @@
       </div>
     </section>
 
-    <section id="audience" class="section reveal">
+    <section id="audience" class="section reveal product-strip">
       <div class="container two-col">
         <article class="panel">
-          <h2>Job Seeker Use Cases</h2>
+          <h2>For Job Seekers</h2>
           <ul>
             <li>View salary ranges by common job roles</li>
             <li>Search jobs and inspect role details</li>
@@ -247,7 +276,7 @@
         </article>
 
         <article class="panel">
-          <h2>Employer Use Cases</h2>
+          <h2>For Employers</h2>
           <ul>
             <li>Post job listings</li>
             <li>Manage active job posts</li>
@@ -256,39 +285,12 @@
         </article>
       </div>
     </section>
-
-    <section id="timeline" class="section reveal">
-      <div class="container">
-        <div class="section-heading">
-          <p class="kicker">Project Roadmap</p>
-          <h2>Phase Timeline</h2>
-        </div>
-
-        <ol class="timeline">
-          <li>Requirement and planning</li>
-          <li>UI and UX design</li>
-          <li>Frontend development</li>
-          <li>Content integration</li>
-          <li>Testing and debugging</li>
-          <li>Deployment and documentation</li>
-        </ol>
-      </div>
-    </section>
-
-    <section class="section reveal">
-      <div class="container architecture">
-        <h2>Architecture Placeholder</h2>
-        <p>
-          Frontend (HTML/CSS/JS) -> Backend Server -> Database (Users, Jobs, Salaries) -> Firebase Hosting or Cloud.
-        </p>
-      </div>
-    </section>
   </main>
 
   <footer class="site-footer">
     <div class="container footer-wrap">
-      <p>Career Bridge Skeleton Project</p>
-      <p>Software Development Project I</p>
+      <p>Career Bridge</p>
+      <p>Bangladesh-focused career platform</p>
     </div>
   </footer>
 
@@ -307,7 +309,7 @@
 
       <div id="jobDetailPanel" class="job-detail-panel"></div>
 
-      <h3>Apply for this job</h3>
+      <h3>Apply with CV</h3>
       <form id="applyForm" class="stack-form">
         <input id="applyJobId" name="jobId" type="hidden" />
 
@@ -383,8 +385,8 @@
         <i class="fa-solid fa-xmark"></i>
       </button>
 
-      <h3 id="authModalTitle">Account Login</h3>
-      <p class="helper-note">Choose your role and sign in.</p>
+      <h3 id="authModalTitle">Welcome to Career Bridge</h3>
+      <p class="helper-note">Choose your workspace and continue securely.</p>
 
       <div class="auth-role-switch" role="tablist" aria-label="Account role">
         <button
@@ -396,7 +398,7 @@
           aria-controls="employeeAuthPanel"
           data-auth-role="employee"
         >
-          Employee
+          Job Seeker
         </button>
         <button
           id="employerAuthTab"
@@ -414,17 +416,17 @@
       <section id="employeeAuthPanel" class="auth-panel" role="tabpanel" aria-labelledby="employeeAuthTab">
         <form id="employeeAuthForm" class="stack-form">
           <label>
-            Employee email
+            Job seeker email
             <input id="employeeEmail" name="employeeEmail" type="email" required />
           </label>
 
           <label>
-            Employee password
+            Job seeker password
             <input id="employeePassword" name="employeePassword" type="password" required />
           </label>
 
           <div class="inline-actions">
-            <button class="btn btn-secondary" type="submit">Sign In as Employee</button>
+            <button class="btn btn-secondary" type="submit">Sign In as Job Seeker</button>
             <button id="employeeLogoutButton" class="btn btn-ghost" type="button">Sign Out</button>
           </div>
         </form>

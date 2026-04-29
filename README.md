@@ -1,13 +1,14 @@
 # Career Bridge
 
-This repository contains a developed MVP implementation of the Career Bridge proposal:
+Career Bridge is a Bangladesh-focused job and career platform that supports job discovery, salary insight, CV applications, employer job posting, and employer-scoped applicant review.
 
-- Job discovery UI
-- Salary insight cards (BDT)
-- Job detail view with requirements
-- Job application flow
-- Employer job posting and listing management
-- Responsive design for desktop/tablet/mobile
+- GitHub-inspired full dark professional UI using near-black surfaces, subtle borders, muted text, and restrained green/blue actions
+- Salary insight cards in BDT
+- Job detail modal with requirements
+- Employee/job seeker login and CV application flow
+- Employer login, job posting, listing management, and applicant review
+- Employer-only CV preview/download for owned job applications
+- Responsive design for mobile, tablet, and desktop
 - Express API with in-memory data store
 
 ## Project Structure
@@ -42,7 +43,6 @@ This repository contains a developed MVP implementation of the Career Bridge pro
    ```
 2. Start server:
    ```bash
-   cp .env.example .env
    npm run dev
    ```
 3. Open in browser:
@@ -65,10 +65,13 @@ Note:
    - `AUTH_SESSION_TTL_MS=28800000` (8 hours)
    - `REQUIRE_EMPLOYEE_AUTH=true`
 
+Do not commit real `.env` files, `node_modules`, `.venv`, `.DS_Store`, or private files in `backend/uploads/`. The `.gitignore` is configured to keep uploaded CVs out of source control except `backend/uploads/.gitkeep`.
+
 ## Implemented Frontend Features
 
 - Live API connection status indicator
 - Search and filter jobs in real time
+- Quick filter chips for common job searches
 - View job details in modal
 - Submit applications from modal form
 - Upload CV during application (PDF, DOC, DOCX)
@@ -81,6 +84,23 @@ Note:
 - Header-based employer credential flow for sensitive operations
 - Token-based employer login session (`/api/auth/login`)
 - Token-based employee login session for application submission
+- GitHub-style dark responsive UI with dark panels, modal transitions, focus states, subtle hover states, and reduced-motion support
+
+
+## Theme Update
+
+The UI has been restyled to a GitHub Dark-inspired product theme:
+
+- Near-black app background: `#010409` / `#0d1117`
+- Dark cards and dashboard panels: `#161b22`
+- Thin GitHub-style borders: `#30363d`
+- Muted secondary text: `#8b949e`
+- Green primary actions: `#238636`
+- Blue links/focus accents: `#58a6ff`
+- No bright glassmorphism/neon backgrounds
+- Subtle hover, modal, and reveal transitions
+
+This keeps the app professional and serious, closer to GitHub's dashboard style while still fitting a career platform.
 
 ## API Endpoints
 
@@ -105,10 +125,3 @@ Note:
 Compatibility note:
 - Query/body credentials are still accepted for backward compatibility, but bearer tokens are now preferred.
 
-## Next Suggested Steps
-
-1. Persist data with a real database (PostgreSQL / MongoDB).
-2. Add authentication and role-based access.
-3. Add input validation middleware and rate limiting.
-4. Add automated API and UI tests.
-5. Deploy backend + frontend to Firebase/Cloud target.

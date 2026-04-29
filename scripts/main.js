@@ -107,6 +107,7 @@ const elements = {
   jobList: document.querySelector("#jobList"),
   jobCount: document.querySelector("#jobCount"),
   jobSearch: document.querySelector("#jobSearch"),
+  filterChips: document.querySelector("#filterChips"),
   listingGrid: document.querySelector("#listingGrid"),
   applicationList: document.querySelector("#applicationList"),
   authQuickStatus: document.querySelector("#authQuickStatus"),
@@ -402,6 +403,25 @@ function formatDate(value) {
   });
 }
 
+function truncateText(value, maxLength = 120) {
+  const normalized = String(value || "").replace(/\s+/g, " ").trim();
+
+  if (normalized.length <= maxLength) {
+    return normalized;
+  }
+
+  return `${normalized.slice(0, maxLength - 1).trim()}...`;
+}
+
+function getInitials(value) {
+  return String(value || "CB")
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("") || "CB";
+}
+
 async function requestJson(path, options = {}) {
   const response = await fetchWithTimeout(`${API_BASE}${path}`, {
     ...options,
@@ -463,30 +483,55 @@ function setApiStatus(online, message = "") {
 }
 
 function createSalaryCard(item) {
+  const trendLabel = item.trend || "Market signal";
+  const trendIcon = /high|growing/i.test(trendLabel)
+    ? "fa-arrow-trend-up"
+    : "fa-chart-simple";
+
   return `
-    <article class="card">
-      <h3>${escapeHtml(item.role)}</h3>
-      <p><strong>${escapeHtml(item.salaryRange)}</strong></p>
-      <p>${escapeHtml(item.level)}</p>
-      <span class="badge">${escapeHtml(item.trend)}</span>
+    <article class="card salary-card">
+      <div class="salary-card-top">
+        <div>
+          <p class="eyebrow">Compensation</p>
+          <h3>${escapeHtml(item.role)}</h3>
+        </div>
+        <span class="icon-bubble"><i class="fa-solid ${trendIcon}" aria-hidden="true"></i></span>
+      </div>
+      <p class="salary-value">${escapeHtml(item.salaryRange)}</p>
+      <p>${escapeHtml(item.level || "Role benchmark")}</p>
+      <span class="badge success">${escapeHtml(trendLabel)}</span>
     </article>
   `;
 }
 
 function createJobCard(job) {
+  const requirements = normalizeRequirements(job.requirements);
+  const requirementPreview = requirements.length
+    ? truncateText(requirements.slice(0, 2).join(" • "), 120)
+    : "Requirements will be shared by the employer.";
+
   return `
     <article class="job-card">
-      <h3>${escapeHtml(job.title)}</h3>
-      <p><strong>${escapeHtml(job.company)}</strong></p>
-      <p>${escapeHtml(job.location)} | ${escapeHtml(job.type)}</p>
-      <p>${escapeHtml(job.salary)}</p>
-      <span class="badge">Posted ${escapeHtml(formatDate(job.postedAt))}</span>
+      <div class="job-card-top">
+        <div>
+          <h3>${escapeHtml(job.title)}</h3>
+          <p><strong>${escapeHtml(job.company)}</strong></p>
+        </div>
+        <span class="icon-bubble" aria-hidden="true">${escapeHtml(getInitials(job.company))}</span>
+      </div>
+      <div class="job-meta-list">
+        <span class="meta-pill"><i class="fa-solid fa-location-dot" aria-hidden="true"></i>${escapeHtml(job.location || "Bangladesh")}</span>
+        <span class="meta-pill"><i class="fa-solid fa-briefcase" aria-hidden="true"></i>${escapeHtml(job.type || "Not specified")}</span>
+        <span class="meta-pill"><i class="fa-regular fa-calendar" aria-hidden="true"></i>${escapeHtml(formatDate(job.postedAt))}</span>
+      </div>
+      <p class="job-salary">${escapeHtml(job.salary || "Salary negotiable")}</p>
+      <p class="requirements-preview">${escapeHtml(requirementPreview)}</p>
       <div class="job-actions">
         <button class="btn-action" type="button" data-action="details" data-id="${job.id}">
-          View Details
+          <i class="fa-regular fa-eye" aria-hidden="true"></i>Details
         </button>
         <button class="btn-action strong" type="button" data-action="apply" data-id="${job.id}">
-          Apply
+          <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>Apply
         </button>
       </div>
     </article>
@@ -496,12 +541,17 @@ function createJobCard(job) {
 function createListingItem(job) {
   return `
     <article class="listing-item">
-      <h3>${escapeHtml(job.title)}</h3>
-      <p>${escapeHtml(job.company)} | ${escapeHtml(job.location)} | ${escapeHtml(job.type)}</p>
+      <div class="listing-top">
+        <div>
+          <h3>${escapeHtml(job.title)}</h3>
+          <p>${escapeHtml(job.company)} | ${escapeHtml(job.location)} | ${escapeHtml(job.type)}</p>
+        </div>
+        <span class="badge">Live</span>
+      </div>
       <p>${escapeHtml(job.salary)}</p>
       <div class="listing-actions">
         <button class="btn-action danger" type="button" data-action="delete-job" data-id="${job.id}">
-          Remove Listing
+          <i class="fa-regular fa-trash-can" aria-hidden="true"></i>Remove
         </button>
       </div>
     </article>
@@ -513,22 +563,35 @@ function createApplicationItem(application) {
   const roleLabel = job ? `${job.title} (${job.company})` : `Job #${application.jobId}`;
   const hasLocalBlob = Boolean(application.cvUrl && String(application.cvUrl).startsWith("blob:"));
   const canViewCv = Boolean(application.canViewCv || hasLocalBlob);
+  const coverPreview = truncateText(application.coverLetter || "No cover letter provided.", 150);
   const cvActionMarkup = canViewCv
     ? `
       <div class="application-actions">
-        <button class="btn-action cv-link" type="button" data-action="view-cv" data-id="${application.id}">View CV</button>
-        <button class="btn-action" type="button" data-action="download-cv" data-id="${application.id}">Download CV</button>
+        <button class="btn-action cv-link" type="button" data-action="view-cv" data-id="${application.id}">
+          <i class="fa-regular fa-file-lines" aria-hidden="true"></i>Preview CV
+        </button>
+        <button class="btn-action" type="button" data-action="download-cv" data-id="${application.id}">
+          <i class="fa-solid fa-download" aria-hidden="true"></i>Download
+        </button>
       </div>
     `
     : "<p>CV hidden. Sign in as the job owner to view.</p>";
 
   return `
     <article class="application-item">
-      <h3>${escapeHtml(application.applicantName)}</h3>
-      <p><strong>${escapeHtml(roleLabel)}</strong></p>
-      <p>${escapeHtml(application.applicantEmail)}${application.applicantPhone ? ` | ${escapeHtml(application.applicantPhone)}` : ""}</p>
+      <div class="application-top">
+        <div>
+          <h3>${escapeHtml(application.applicantName)}</h3>
+          <p><strong>${escapeHtml(roleLabel)}</strong></p>
+        </div>
+        <span class="badge">Submitted ${escapeHtml(formatDate(application.createdAt))}</span>
+      </div>
+      <div class="application-contact">
+        <span class="meta-pill"><i class="fa-regular fa-envelope" aria-hidden="true"></i>${escapeHtml(application.applicantEmail)}</span>
+        ${application.applicantPhone ? `<span class="meta-pill"><i class="fa-solid fa-phone" aria-hidden="true"></i>${escapeHtml(application.applicantPhone)}</span>` : ""}
+      </div>
+      <p class="cover-preview">${escapeHtml(coverPreview)}</p>
       ${cvActionMarkup}
-      <p>Submitted ${escapeHtml(formatDate(application.createdAt))}</p>
     </article>
   `;
 }
@@ -691,7 +754,8 @@ function renderJobCards() {
 
   if (filteredJobs.length === 0) {
     elements.jobList.innerHTML = `
-      <article class="job-card">
+      <article class="empty-state">
+        <span class="icon-bubble"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></span>
         <h3>No result found</h3>
         <p>Try another keyword like role, company, or city.</p>
       </article>
@@ -993,8 +1057,12 @@ function openJobModal(job, focusForm = false) {
 
   elements.jobDetailPanel.innerHTML = `
     <h2 id="modalJobTitle">${escapeHtml(job.title)}</h2>
-    <p><strong>${escapeHtml(job.company)}</strong> | ${escapeHtml(job.location)} | ${escapeHtml(job.type)}</p>
-    <p><strong>${escapeHtml(job.salary)}</strong></p>
+    <div class="job-meta-list">
+      <span class="meta-pill"><i class="fa-solid fa-building" aria-hidden="true"></i>${escapeHtml(job.company)}</span>
+      <span class="meta-pill"><i class="fa-solid fa-location-dot" aria-hidden="true"></i>${escapeHtml(job.location)}</span>
+      <span class="meta-pill"><i class="fa-solid fa-briefcase" aria-hidden="true"></i>${escapeHtml(job.type)}</span>
+    </div>
+    <p class="job-salary">${escapeHtml(job.salary)}</p>
     <p id="modalJobDescription">${escapeHtml(job.description || "No description provided yet.")}</p>
     <ul class="job-detail-list">${requirementsMarkup}</ul>
   `;
@@ -1119,8 +1187,47 @@ function setupMenu() {
   });
 }
 
+function setupActiveNavigation() {
+  const links = Array.from(document.querySelectorAll(".site-nav a[href^='#']"));
+  const sections = links
+    .map((link) => document.querySelector(link.getAttribute("href")))
+    .filter(Boolean);
+
+  if (links.length === 0 || sections.length === 0 || !("IntersectionObserver" in window)) {
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const visibleEntry = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+      if (!visibleEntry) {
+        return;
+      }
+
+      links.forEach((link) => {
+        link.classList.toggle("active", link.getAttribute("href") === `#${visibleEntry.target.id}`);
+      });
+    },
+    {
+      rootMargin: "-28% 0px -58% 0px",
+      threshold: [0.08, 0.18, 0.32]
+    }
+  );
+
+  sections.forEach((section) => observer.observe(section));
+}
+
 function setupRevealAnimation() {
   const sections = document.querySelectorAll(".reveal");
+
+  if (!("IntersectionObserver" in window) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    sections.forEach((section) => section.classList.add("in-view"));
+    return;
+  }
+
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -1296,8 +1403,34 @@ function setupJobSearch() {
 
   elements.jobSearch.addEventListener("input", (event) => {
     state.currentKeyword = event.target.value;
+    if (elements.filterChips) {
+      elements.filterChips.querySelectorAll(".filter-chip").forEach((chip) => {
+        chip.classList.toggle("active", !event.target.value && chip.dataset.filter === "");
+      });
+    }
     renderJobCards();
   });
+
+  if (elements.filterChips) {
+    elements.filterChips.addEventListener("click", (event) => {
+      const chip = event.target.closest(".filter-chip");
+
+      if (!chip) {
+        return;
+      }
+
+      const value = chip.dataset.filter || "";
+      elements.jobSearch.value = value;
+      state.currentKeyword = value;
+
+      elements.filterChips.querySelectorAll(".filter-chip").forEach((item) => {
+        item.classList.toggle("active", item === chip);
+      });
+
+      renderJobCards();
+      elements.jobSearch.focus();
+    });
+  }
 }
 
 function setupJobActions() {
@@ -1877,6 +2010,7 @@ async function init() {
   loadEmployeeSession();
   loadEmployerSession();
   setupMenu();
+  setupActiveNavigation();
   setupRevealAnimation();
   setupModalEvents();
   setAuthModalRole("employee");
